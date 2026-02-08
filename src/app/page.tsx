@@ -30,9 +30,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
-  const hotGames = getHotGames();
-  const normalGames = getNormalGames();
+export default async function Home() {
+  const hotGames = await getHotGames();
+  const normalGames = await getNormalGames();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -84,7 +84,7 @@ export default function Home() {
       />
       <div className="min-h-screen flex flex-col">
         <Header />
-        <main id="games" className="grow container mx-auto px-4 py-4 md:py-8">
+        <main id="games" className="grow container mx-auto px-4 py-4 md:py-8 scroll-mt-24 sm:scroll-mt-28">
           {/* Hot Games Section */}
           {hotGames.length > 0 && (
             <section className="mb-8 md:mb-12">

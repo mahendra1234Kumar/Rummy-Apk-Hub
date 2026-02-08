@@ -53,9 +53,11 @@ export default function GameCard({ game, index = 0 }: GameCardProps) {
         {/* Info */}
         <div className="flex-1 min-w-0 flex flex-col">
           <div className="min-w-0">
-            <h3 className="text-[15px] sm:text-base font-bold text-gray-900 truncate">
-              {game.name}
-            </h3>
+            <Link href={`/game/${game.id}`}>
+              <h3 className="text-[15px] sm:text-base font-bold text-gray-900 truncate hover:text-blue-700 transition-colors cursor-pointer">
+                {game.name}
+              </h3>
+            </Link>
           </div>
 
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -87,7 +89,7 @@ export default function GameCard({ game, index = 0 }: GameCardProps) {
         {/* Download Button - Centered vertically */}
         <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2">
           <Link
-            href={game.downloadUrl}
+            href={`/game/${game.id}`}
             className="bg-red-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-red-700 active:bg-red-800 transition font-semibold text-xs sm:text-sm inline-flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap"
           >
             <svg

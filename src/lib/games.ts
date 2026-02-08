@@ -1,72 +1,81 @@
-import { Game } from "@/types/game";
-import fs from "fs";
-import path from "path";
+import { Game as GameType } from "@/types/game";
+import { connectDB } from "@/lib/mongodb";
+import { Game } from "@/app/models/Game";
 
-const dataFilePath = path.join(process.cwd(), "src", "lib", "data.json");
-
-export function getGames(): Game[] {
+/**
+ * Fetch all games from MongoDB
+ */
+export async function getGames(): Promise<GameType[]> {
   try {
-    const fileContents = fs.readFileSync(dataFilePath, "utf8");
-    return JSON.parse(fileContents);
+    await connectDB();
+    const games = await Game.find().sort({ createdAt: -1 }).lean();
+    
+    // Convert MongoDB _id to id and format dates
+    return games.map((game: any) => ({
+      id: game._id.toString(),
+      name: game.name,
+      description: game.description,
+      image: game.image,
+      downloadUrl: game.downloadUrl,
+      rating: game.rating,
+      bonus: game.bonus || "",
+      downloads: game.downloads || "",
+      minWithdrawal: game.minWithdrawal || "",
+      isHot: game.isHot || false,
+      category: game.category || "General",
+      createdAt: game.createdAt ? new Date(game.createdAt).toISOString() : new Date().toISOString(),
+      updatedAt: game.updatedAt ? new Date(game.updatedAt).toISOString() : new Date().toISOString(),
+    }));
   } catch (error) {
-    console.error("Error reading games data:", error);
+    console.error("Error fetching games from MongoDB:", error);
     return [];
   }
 }
 
-export function getHotGames(): Game[] {
-  return getGames().filter((game) => game.isHot);
+/**
+ * Fetch hot games (isHot = true) from MongoDB
+ */
+export async function getHotGames(): Promise<GameType[]> {
+  const games = await getGames();
+  return games.filter((game) => game.isHot);
 }
 
-export function getNormalGames(): Game[] {
-  return getGames().filter((game) => !game.isHot);
+/**
+ * Fetch normal games (isHot = false) from MongoDB
+ */
+export async function getNormalGames(): Promise<GameType[]> {
+  const games = await getGames();
+  return games.filter((game) => !game.isHot);
 }
 
-export function getGameById(id: string): Game | undefined {
-  return getGames().find((game) => game.id === id);
-}
-
-export function saveGames(games: Game[]): void {
+/**
+ * Fetch a single game by ID from MongoDB
+ */
+export async function getGameById(id: string): Promise<GameType | undefined> {
   try {
-    fs.writeFileSync(dataFilePath, JSON.stringify(games, null, 2), "utf8");
+    await connectDB();
+    const game = await Game.findById(id).lean();
+    
+    if (!game) return undefined;
+    
+    return {
+      id: game._id.toString(),
+      name: game.name,
+      description: game.description,
+      image: game.image,
+      downloadUrl: game.downloadUrl,
+      rating: game.rating,
+      bonus: game.bonus || "",
+      downloads: game.downloads || "",
+      minWithdrawal: game.minWithdrawal || "",
+      isHot: game.isHot || false,
+      category: game.category || "General",
+      createdAt: game.createdAt ? new Date(game.createdAt).toISOString() : new Date().toISOString(),
+      updatedAt: game.updatedAt ? new Date(game.updatedAt).toISOString() : new Date().toISOString(),
+    };
   } catch (error) {
-    console.error("Error saving games data:", error);
-    throw error;
+    console.error("Error fetching game by ID from MongoDB:", error);
+    return undefined;
   }
-}
-
-export function addGame(game: Omit<Game, "id" | "createdAt" | "updatedAt">): Game {
-  const games = getGames();
-  const newGame: Game = {
-    ...game,
-    id: Date.now().toString(),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-  games.push(newGame);
-  saveGames(games);
-  return newGame;
-}
-
-export function updateGame(id: string, updates: Partial<Game>): Game | null {
-  const games = getGames();
-  const index = games.findIndex((game) => game.id === id);
-  if (index === -1) return null;
-
-  games[index] = {
-    ...games[index],
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-  saveGames(games);
-  return games[index];
-}
-
-export function deleteGame(id: string): boolean {
-  const games = getGames();
-  const filteredGames = games.filter((game) => game.id !== id);
-  if (filteredGames.length === games.length) return false;
-  saveGames(filteredGames);
-  return true;
 }
 

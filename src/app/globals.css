@@ -27,7 +27,14 @@ body {
   padding: 0;
 }
 
-html, body {
+html {
+  width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scroll-padding-top: 120px; /* Account for sticky header */
+}
+
+body {
   width: 100%;
   overflow-x: hidden;
 }
@@ -35,4 +42,32 @@ html, body {
 header {
   width: 100%;
   max-width: 100%;
+}
+
+/* Hide scrollbar for navigation on mobile */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Ensure navigation doesn't have extra space */
+nav {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Remove extra space from navigation on mobile */
+nav > div {
+  min-width: 100%;
+}
+
+/* On mobile, ensure no right padding creates extra space */
+@media (max-width: 640px) {
+  header nav > div {
+    padding-right: 0 !important;
+  }
 }
