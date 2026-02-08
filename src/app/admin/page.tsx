@@ -25,6 +25,7 @@ export default function AdminPage() {
     isHot: false,
     category: "Rummy",
   });
+ 
 
   useEffect(() => {
     if (authenticated) {
@@ -66,36 +67,80 @@ export default function AdminPage() {
     }
   };
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   try {
+  //     const url = editingGame ? "/api/games" : "/api/games";
+  //     const method = editingGame ? "PUT" : "POST";
+  //     const body = editingGame
+  //       ? { id: editingGame.id, ...formData }
+  //       : formData;
+
+  //     const response = await fetch(url, {
+  //       method,
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(body),
+  //     });
+
+  //     const data = await response.json();
+  //     if (data.success) {
+  //       await fetchGames();
+  //       resetForm();
+  //       alert(editingGame ? "Game updated successfully!" : "Game added successfully!");
+  //     } else {
+  //       alert(data.error || "Operation failed");
+  //     }
+  //   } catch (error) {
+  //     alert("Operation failed");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const url = editingGame ? "/api/games" : "/api/games";
-      const method = editingGame ? "PUT" : "POST";
-      const body = editingGame
-        ? { id: editingGame.id, ...formData }
-        : formData;
+  e.preventDefault();
+  if (loading) return;
 
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+  setLoading(true);
 
-      const data = await response.json();
-      if (data.success) {
-        await fetchGames();
-        resetForm();
-        alert(editingGame ? "Game updated successfully!" : "Game added successfully!");
-      } else {
-        alert(data.error || "Operation failed");
-      }
-    } catch (error) {
-      alert("Operation failed");
-    } finally {
-      setLoading(false);
+  try {
+    const isEditing = !!editingGame;
+
+    const response = await fetch("/api/games", {
+      method: isEditing ? "PUT" : "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(
+        isEditing
+          ? { id: editingGame.id, ...formData }
+          : formData
+      ),
+    });
+
+    // If server crashed (500 etc)
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
     }
-  };
+
+    const data = await response.json();
+
+    if (data.success) {
+      await fetchGames();     // refresh list
+      resetForm();            // clear form
+      alert(isEditing ? "Game updated successfully!" : "Game added successfully!");
+    } else {
+      alert(data.error || "Operation failed");
+    }
+  } catch (error: any) {
+    console.error("Submit error:", error);
+    alert(error.message || "Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleImageUpload = async (file: File) => {
     if (!file) return;
