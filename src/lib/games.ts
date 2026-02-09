@@ -10,6 +10,8 @@ export async function getGames(): Promise<GameType[]> {
     await connectDB();
     const games = await Game.find().sort({ createdAt: -1 }).lean();
     
+    console.log(`✅ Fetched ${games.length} games from MongoDB`);
+    
     // Convert MongoDB _id to id and format dates
     return games.map((game: any) => ({
       id: game._id.toString(),
@@ -26,8 +28,20 @@ export async function getGames(): Promise<GameType[]> {
       createdAt: game.createdAt ? new Date(game.createdAt).toISOString() : new Date().toISOString(),
       updatedAt: game.updatedAt ? new Date(game.updatedAt).toISOString() : new Date().toISOString(),
     }));
-  } catch (error) {
-    console.error("Error fetching games from MongoDB:", error);
+  } catch (error: any) {
+    console.error("❌ Error fetching games from MongoDB:", error);
+    console.error("Error details:", {
+      message: error?.message,
+      name: error?.name,
+      stack: error?.stack,
+    });
+    
+    // In production, return empty array to prevent page crashes
+    // But log the error for debugging
+    if (process.env.NODE_ENV === "production") {
+      console.error("⚠️ Returning empty games array due to MongoDB connection error");
+    }
+    
     return [];
   }
 }

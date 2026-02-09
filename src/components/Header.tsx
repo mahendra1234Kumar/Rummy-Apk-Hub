@@ -75,13 +75,13 @@ export default function Header() {
           >
             Home
           </Link>
-          <Link 
+          {/* <Link 
             href="/#games" 
             className={`transition whitespace-nowrap flex-shrink-0 ${getActiveClass("/#games")}`}
             onClick={handleGamesClick}
           >
             Games
-          </Link>
+          </Link> */}
           <Link 
             href="/about" 
             className={`transition whitespace-nowrap flex-shrink-0 ${getActiveClass("/about")}`}
