@@ -85,3 +85,4 @@ npm run dev
 - After changing environment variables, you must redeploy
 - Check server logs for detailed error messages
 
+

@@ -1,8 +1,12 @@
-import { getHotGames, getNormalGames } from "@/lib/games";
+import { Game } from "@/types/game";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GameList from "@/components/GameList";
 import type { Metadata } from "next";
+
+// Always fetch fresh data from the API so new games from the admin panel
+// are reflected on the user side.
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Game Rummy APK Hub - All Rummy & Teen Patti Game APKs Download",
@@ -30,9 +34,50 @@ export const metadata: Metadata = {
   },
 };
 
+async function fetchAllGames(): Promise<Game[]> {
+  try {
+    // Build an absolute base URL that works in both dev and production
+    const vercelUrl = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : null;
+
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      vercelUrl ||
+      "http://localhost:3000";
+
+    const response = await fetch(`${baseUrl}/api/games`, {
+      // no-store so we always see latest data after admin changes
+      cache: "no-store",
+      next: { revalidate: 0 },
+    });
+
+    if (!response.ok) {
+      console.error("❌ Failed to fetch games from /api/games:", response.status);
+      return [];
+    }
+
+    const data = await response.json();
+
+    if (!data.success || !Array.isArray(data.games)) {
+      console.error("❌ Invalid response format from /api/games:", data);
+      return [];
+    }
+
+    return data.games as Game[];
+  } catch (error: any) {
+    console.error("❌ Error calling /api/games:", {
+      message: error?.message,
+      stack: error?.stack,
+    });
+    return [];
+  }
+}
+
 export default async function Home() {
-  const hotGames = await getHotGames();
-  const normalGames = await getNormalGames();
+  const games = await fetchAllGames();
+  const hotGames = games.filter((game) => game.isHot);
+  const normalGames = games.filter((game) => !game.isHot);
 
   const jsonLd = {
     "@context": "https://schema.org",
