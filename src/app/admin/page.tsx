@@ -62,6 +62,7 @@ export default function AdminPage() {
       if (data.success) {
         setGames(data.games);
       }
+      console.log("its All games data which is come from the backend",data);
     } catch (error) {
       console.error("Failed to fetch games:", error);
     }

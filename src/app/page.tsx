@@ -6,7 +6,9 @@ import type { Metadata } from "next";
 
 // Always fetch fresh data from the API so new games from the admin panel
 // are reflected on the user side.
+
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
 export const metadata: Metadata = {
   title: "Game Rummy APK Hub - All Rummy & Teen Patti Game APKs Download",
@@ -49,7 +51,7 @@ async function fetchAllGames(): Promise<Game[]> {
     const response = await fetch(`${baseUrl}/api/games`, {
       // no-store so we always see latest data after admin changes
       cache: "no-store",
-      next: { revalidate: 0 },
+
     });
 
     if (!response.ok) {
@@ -73,6 +75,7 @@ async function fetchAllGames(): Promise<Game[]> {
     return [];
   }
 }
+
 
 export default async function Home() {
   const games = await fetchAllGames();
