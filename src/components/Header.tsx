@@ -44,10 +44,10 @@ export default function Header() {
 
       {/* Tabs row */}
       <nav className="bg-white border-b border-gray-200 w-full overflow-hidden">
-        <div className="w-full flex items-center gap-3 sm:gap-4 md:gap-6 text-sm font-semibold overflow-x-auto scrollbar-hide py-2 pl-3 sm:px-3">
+        <div className="grid grid-cols-5 sm:flex sm:items-center sm:gap-4 md:gap-6 text-sm font-semibold py-2 px-2 sm:px-3 w-full">
           <Link 
             href="/" 
-            className={`transition whitespace-nowrap flex-shrink-0 ${getActiveClass("/")}`}
+            className={`transition whitespace-nowrap text-center sm:text-left ${getActiveClass("/")}`}
           >
             Home
           </Link>
@@ -60,19 +60,25 @@ export default function Header() {
           </Link> */}
           <Link 
             href="/about" 
-            className={`transition whitespace-nowrap flex-shrink-0 ${getActiveClass("/about")}`}
+            className={`transition whitespace-nowrap text-center sm:text-left ${getActiveClass("/about")}`}
           >
             About
           </Link>
+          <Link
+            href="/blogs"
+            className={`transition whitespace-nowrap text-center sm:text-left ${getActiveClass("/blogs")}`}
+          >
+            Blogs
+          </Link>
           <Link 
             href="/contact" 
-            className={`transition whitespace-nowrap flex-shrink-0 ${getActiveClass("/contact")}`}
+            className={`transition whitespace-nowrap text-center sm:text-left ${getActiveClass("/contact")}`}
           >
             Contact
           </Link>
           <Link 
             href="/privacy" 
-            className={`transition whitespace-nowrap flex-shrink-0 ${getActiveClass("/privacy")}`}
+            className={`transition whitespace-nowrap text-center sm:text-left ${getActiveClass("/privacy")}`}
           >
             Privacy
           </Link>

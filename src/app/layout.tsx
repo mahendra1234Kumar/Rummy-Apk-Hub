@@ -40,6 +40,14 @@ export const metadata: Metadata = {
   authors: [{ name: "rummys.online" }],
   creator: "rummys.online",
   publisher: "rummys.online",
+  icons: {
+    icon: [
+      { url: "/websitelogo.png", type: "image/png" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    shortcut: "/websitelogo.png",
+    apple: "/websitelogo.png",
+  },
   formatDetection: {
     email: false,
     address: false,
@@ -55,7 +63,7 @@ export const metadata: Metadata = {
       "Download the best rummy and gaming apps on rummys.online with bonus offers and fast withdrawal options.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/websitelogo.png",
         width: 1200,
         height: 630,
         alt: "rummys.online",
@@ -67,7 +75,7 @@ export const metadata: Metadata = {
     title: "rummys.online - Rummy APK Download",
     description:
       "Download the best rummy and gaming apps on rummys.online with bonus offers.",
-    images: ["/og-image.jpg"],
+    images: ["/websitelogo.png"],
   },
   robots: {
     index: true,
