@@ -13,12 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://allrummyapps.com"),
+  metadataBase: new URL("https://rummys.online"),
   title: {
-    default: "All Rummy Apps - Game Rummy Apk Download",
-    template: "%s | All Rummy Apps",
+    default: "rummys.online - Rummy APK Download",
+    template: "%s | rummys.online",
   },
-  description: "Download Game Rummy Apk and play 60+ games including Rummy, Teen Patti, Ludo, Poker. Get ₹100 instant signup bonus. Fast UPI withdrawal. Safe & secure platform.",
+  description:
+    "Download top rummy, teen patti, ludo, and poker APKs on rummys.online. Discover bonus offers, fast withdrawal apps, and trusted gaming platforms in one place.",
   keywords: [
     "rummy apk",
     "game rummy download",
@@ -36,9 +37,9 @@ export const metadata: Metadata = {
     "play rummy online",
     "rummy india",
   ],
-  authors: [{ name: "All Rummy Apps" }],
-  creator: "All Rummy Apps",
-  publisher: "All Rummy Apps",
+  authors: [{ name: "rummys.online" }],
+  creator: "rummys.online",
+  publisher: "rummys.online",
   formatDetection: {
     email: false,
     address: false,
@@ -47,23 +48,25 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://allrummyapps.com",
-    siteName: "All Rummy Apps",
-    title: "Game Rummy Apk Download - All Rummy Apps",
-    description: "Download the best rummy and gaming apps. Get instant signup bonuses and play exciting games!",
+    url: "https://rummys.online",
+    siteName: "rummys.online",
+    title: "rummys.online - Rummy APK Download",
+    description:
+      "Download the best rummy and gaming apps on rummys.online with bonus offers and fast withdrawal options.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "All Rummy Apps",
+        alt: "rummys.online",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Game Rummy Apk Download - All Rummy Apps",
-    description: "Download the best rummy and gaming apps. Get instant signup bonuses!",
+    title: "rummys.online - Rummy APK Download",
+    description:
+      "Download the best rummy and gaming apps on rummys.online with bonus offers.",
     images: ["/og-image.jpg"],
   },
   robots: {

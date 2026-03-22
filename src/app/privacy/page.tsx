@@ -13,9 +13,10 @@ export default function PrivacyPolicy() {
       <Header />
       <main className="flex-1 flex items-center justify-center p-4 py-8">
         <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg overflow-hidden relative">
-          {/* Header with title and close button */}
           <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Privacy Policy</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+              Privacy Policy
+            </h1>
             <button
               onClick={() => router.back()}
               className="text-gray-500 hover:text-gray-700 transition text-sm font-medium"
@@ -25,152 +26,118 @@ export default function PrivacyPolicy() {
             </button>
           </div>
 
-          {/* Scrollable content */}
           <div className="p-4 sm:p-6 overflow-y-auto max-h-[70vh]">
             <div className="space-y-6 text-gray-700 text-sm sm:text-base leading-relaxed">
-              {/* Overview */}
               <section>
                 <p className="mb-4">
-                  At <strong>RummyBonusApp.Com</strong>, accessible from RummyBonusApp.Com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by RummyBonusApp.Com and how we use it.
+                  At <strong>rummys.online</strong>, protecting visitor privacy
+                  is important. This page explains what information may be
+                  collected when you use the website and how that information may
+                  be used.
                 </p>
                 <p className="mb-4">
-                  If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.
+                  If you have any questions about this policy, you can contact
+                  us through the contact details shared on the website.
                 </p>
                 <p className="mb-4">
-                  This Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in AllRummyApps.Com. This policy is not applicable to any information collected offline or via channels other than this website.
+                  This policy applies to online activity on rummys.online and
+                  does not apply to information collected offline or outside this
+                  website.
                 </p>
               </section>
 
-              {/* Consent */}
               <section>
-                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">Consent</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">
+                  Consent
+                </h2>
                 <p>
-                  By using our website, you hereby consent to our Privacy Policy and agree to its terms.
+                  By using this website, you consent to this Privacy Policy and
+                  agree to its terms.
                 </p>
               </section>
 
-              {/* Information we collect */}
               <section>
-                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">Information we collect</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">
+                  Information We Collect
+                </h2>
                 <p className="mb-4">
-                  The personal information that you are asked to provide, and the reasons why you are asked to provide it, will be made clear to you at the point we ask you to provide your personal information.
-                </p>
-                <p className="mb-4">
-                  If you contact us directly, we may receive additional information about you such as your name, email address, phone number, the contents of the message and/or attachments you may send us, and any other information you may choose to provide.
+                  If you contact us directly, we may receive information such as
+                  your name, email address, phone number, message contents, and
+                  any attachments you choose to send.
                 </p>
                 <p>
-                  When you register for an Account, we may ask for your contact information, including items such as name, company name, address, email address, and telephone number.
+                  We may also collect standard technical information such as IP
+                  address, browser type, device information, referral pages, and
+                  timestamps for analytics and security purposes.
                 </p>
               </section>
 
-              {/* How we use your information */}
               <section>
-                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">How we use your information</h2>
-                <p className="mb-3">We use the information we collect in various ways, including to:</p>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">
+                  How We Use Information
+                </h2>
                 <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li>Provide, operate, and maintain our website</li>
-                  <li>Improve, personalize, and expand our website</li>
-                  <li>Understand and analyze how you use our website</li>
-                  <li>Develop new products, services, features, and functionality</li>
-                  <li>Communicate with you, either directly or through one of our partners, including for customer service, to provide you with updates and other information relating to the website, and for marketing and promotional purposes</li>
-                  <li>Send you emails</li>
-                  <li>Find and prevent fraud</li>
+                  <li>To operate and maintain the website</li>
+                  <li>To improve website performance and user experience</li>
+                  <li>To understand how visitors use the website</li>
+                  <li>To respond to support, advertising, or business inquiries</li>
+                  <li>To prevent misuse, spam, or fraud</li>
                 </ul>
               </section>
 
-              {/* Log Files */}
               <section>
-                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">Log Files</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">
+                  Cookies and Log Files
+                </h2>
                 <p>
-                  RummyBonusApp.Com follows a standard procedure of using log files. These files log visitors when they visit websites. All hosting companies do this and a part of hosting services' analytics. The information collected by log files include internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks. These are not linked to any information that is personally identifiable. The purpose of the information is for analyzing trends, administering the site, tracking users' movement on the website, and gathering demographic information.
+                  Like many websites, rummys.online may use cookies and standard
+                  log files to understand visitor behavior, improve the site, and
+                  support analytics.
                 </p>
               </section>
 
-              {/* Advertising Partners Privacy Policies */}
               <section>
-                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">Advertising Partners Privacy Policies</h2>
-                <p className="mb-4">
-                  You may consult this list to find the Privacy Policy for each of the advertising partners of RummyBonusApp.Com.
-                </p>
-                <p className="mb-4">
-                  Third-party ad servers or ad networks uses technologies like cookies, JavaScript, or Web Beacons that are used in their respective advertisements and links that appear on AllRummyApps.Com, which are sent directly to users' browser. They automatically receive your IP address when this occurs. These technologies are used to measure the effectiveness of their advertising campaigns and/or to personalize the advertising content that you see on websites that you visit.
-                </p>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">
+                  Third-Party Services
+                </h2>
                 <p>
-                  Note that RummyBonusApp.Com has no access to or control over these cookies that are used by third-party advertisers.
+                  Some links, ads, or services on the website may be provided by
+                  third parties. Their privacy practices are governed by their
+                  own privacy policies, not this one.
                 </p>
               </section>
 
-              {/* Third Party Privacy Policies */}
               <section>
-                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">Third Party Privacy Policies</h2>
-                <p className="mb-4">
-                  RummyBonusApp.Com's Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to consult the respective Privacy Policies of these third-party ad servers for more detailed information. It may include their practices and instructions about how to opt-out of certain options.
-                </p>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">
+                  Children&apos;s Privacy
+                </h2>
                 <p>
-                  You can choose to disable cookies through your individual browser options. To know more detailed information about cookie management with specific web browsers, it can be found at the browsers' respective websites.
+                  rummys.online does not knowingly collect personal information
+                  from children under 13. If you believe a child has shared such
+                  information, please contact us so we can review and remove it
+                  when appropriate.
                 </p>
               </section>
 
-              {/* CCPA Privacy Rights */}
               <section>
-                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">CCPA Privacy Rights (Do Not Sell My Personal Information)</h2>
-                <p className="mb-3">Under the CCPA, among other rights, California consumers have the right to:</p>
-                <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li>Request that a business that collects a consumer's personal data disclose the categories and specific pieces of personal data that a business has collected about consumers.</li>
-                  <li>Request that a business delete any personal data about the consumer that a business has collected.</li>
-                  <li>Request that a business that sells a consumer's personal data, not sell the consumer's personal data.</li>
-                </ul>
-                <p className="mt-4">
-                  If you make a request, we have one month to respond to you. If you would like to exercise any of these rights, please contact us.
-                </p>
-              </section>
-
-              {/* GDPR Data Protection Rights */}
-              <section>
-                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">GDPR Data Protection Rights</h2>
-                <p className="mb-3">We would like to make sure you are fully aware of all of your data protection rights. Every user is entitled to the following:</p>
-                <ul className="list-disc list-inside space-y-2 ml-4">
-                  <li><strong>The right to access</strong> – You have the right to request copies of your personal data. We may charge you a small fee for this service.</li>
-                  <li><strong>The right to rectification</strong> – You have the right to request that we correct any information you believe is inaccurate. You also have the right to request that we complete the information you believe is incomplete.</li>
-                  <li><strong>The right to erasure</strong> – You have the right to request that we erase your personal data, under certain conditions.</li>
-                  <li><strong>The right to restrict processing</strong> – You have the right to request that we restrict the processing of your personal data, under certain conditions.</li>
-                  <li><strong>The right to object to processing</strong> – You have the right to object to our processing of your personal data, under certain conditions.</li>
-                  <li><strong>The right to data portability</strong> – You have the right to request that we transfer the data that we have collected to another organization, or directly to you, under certain conditions.</li>
-                </ul>
-                <p className="mt-4">
-                  If you make a request, we have one month to respond to you. If you would like to exercise any of these rights, please contact us.
-                </p>
-              </section>
-
-              {/* Children's Information */}
-              <section>
-                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">Children's Information</h2>
-                <p className="mb-4">
-                  Another part of our priority is adding protection for children while using the internet. We encourage parents and guardians to observe, participate in, and/or monitor and guide their online activity.
-                </p>
-                <p>
-                  RummyBonusApp.Com does not knowingly collect any Personal Identifiable Information from children under the age of 13. If you think that your child provided this kind of information on our website, we strongly encourage you to contact us immediately and we will do our best efforts to promptly remove such information from our records.
-                </p>
-              </section>
-
-              {/* Contact Information */}
-              <section>
-                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">Contact Information</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">
+                  Contact Information
+                </h2>
                 <p className="mb-2">
                   <Link
-                    href="mailto:support@rummybonusapp.com"
+                    href="mailto:support@rummys.online"
                     className="text-green-600 hover:text-green-700 font-semibold underline"
                   >
-                    Contact Us – support@rummybonusapp.com
+                    Contact Us - support@rummys.online
                   </Link>
                 </p>
               </section>
 
-              {/* Note Section */}
               <div className="pt-4 border-t border-gray-200 mt-6">
-                <p className="font-semibold text-gray-800 mb-2">Note :-</p>
+                <p className="font-semibold text-gray-800 mb-2">Note:</p>
                 <p className="text-gray-600 text-sm">
-                  If You Have an Application Company and You Also Want to Promote Your Application, Then You Can Contact us on This Email Given Above and You Can Get Your Application Advertised on Our Website.
+                  If you want to advertise or promote an application on
+                  rummys.online, you can contact us through the email above.
                 </p>
               </div>
             </div>

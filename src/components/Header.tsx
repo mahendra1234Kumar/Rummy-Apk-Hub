@@ -6,30 +6,6 @@ import { usePathname } from "next/navigation";
 export default function Header() {
   const pathname = usePathname();
 
-  const handleGamesClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    // Only handle if we're on the home page
-    if (pathname === "/") {
-      e.preventDefault();
-      const gamesSection = document.getElementById("games");
-      const header = document.querySelector("header");
-      
-      if (gamesSection && header) {
-        // Get actual header height dynamically
-        const headerHeight = header.offsetHeight;
-        const elementPosition = gamesSection.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerHeight - 10; // 10px extra spacing
-
-        window.scrollTo({
-          top: Math.max(0, offsetPosition),
-          behavior: "smooth",
-        });
-      } else if (gamesSection) {
-        // Fallback if header not found
-        gamesSection.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }
-  };
-
   // Check if current page is active
   const isActive = (href: string) => {
     if (href === "/") {
@@ -59,9 +35,9 @@ export default function Header() {
           <Link
             href="/"
             className="font-bold text-sm sm:text-base truncate"
-            title="Game Rummy APK Hub"
+            title="rummys.online"
           >
-            Game Rummy APK Hub
+            rummys.online
           </Link>
         </div>
       </div>

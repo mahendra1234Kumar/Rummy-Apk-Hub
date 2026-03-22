@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${game.name} - Download APK | Game Rummy APK Hub`,
+    title: `${game.name} - Download APK | rummys.online`,
     description: game.description,
     keywords: `${game.name}, ${game.name} apk, ${game.name} download, rummy games, online rummy`,
     openGraph: {
