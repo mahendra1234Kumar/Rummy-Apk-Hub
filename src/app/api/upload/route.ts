@@ -2,6 +2,36 @@ import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import fs from "fs";
 import { mkdir, writeFile } from "fs/promises";
+import {
+  isCloudinaryConfigured,
+  uploadImageToCloudinary,
+} from "@/lib/cloudinary";
+
+function createSafeFileName(fileName: string) {
+  return fileName
+    .replace(/\s+/g, "-")
+    .replace(/[^a-zA-Z0-9.-]/g, "")
+    .toLowerCase();
+}
+
+async function saveLocally(file: File, buffer: Buffer) {
+  const uploadDir = path.join(process.cwd(), "public", "games");
+
+  if (!fs.existsSync(uploadDir)) {
+    await mkdir(uploadDir, { recursive: true });
+  }
+
+  const safeName = createSafeFileName(file.name);
+  const fileName = `${Date.now()}-${safeName}`;
+  const filePath = path.join(uploadDir, fileName);
+
+  await writeFile(filePath, buffer);
+
+  return {
+    path: `/games/${fileName}`,
+    provider: "local",
+  };
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,7 +45,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ✅ Validate file type
     const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
@@ -24,7 +53,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ✅ Validate file size (2MB)
     const maxSize = 2 * 1024 * 1024;
     if (file.size > maxSize) {
       return NextResponse.json(
@@ -33,36 +61,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Convert file to buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Upload directory
-    const uploadDir = path.join(process.cwd(), "public", "games");
+    if (isCloudinaryConfigured()) {
+      const uploadedImage = await uploadImageToCloudinary(buffer, file.name);
 
-    // Create folder if not exists
-    if (!fs.existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
+      return NextResponse.json({
+        success: true,
+        path: uploadedImage.secure_url,
+        provider: "cloudinary",
+      });
     }
 
-    // Safe filename
-    const safeName = file.name
-      .replace(/\s+/g, "-")
-      .replace(/[^a-zA-Z0-9.-]/g, "")
-      .toLowerCase();
-
-    const fileName = `${Date.now()}-${safeName}`;
-    const filePath = path.join(uploadDir, fileName);
-
-    // Save file
-    await writeFile(filePath, buffer);
-
-    // Public URL (store this in MongoDB)
-    const publicPath = `/games/${fileName}`;
+    const localUpload = await saveLocally(file, buffer);
 
     return NextResponse.json({
       success: true,
-      path: publicPath,
+      path: localUpload.path,
+      provider: localUpload.provider,
+      message:
+        "Cloudinary is not configured, so the image was saved locally instead.",
     });
   } catch (error) {
     console.error("Upload error:", error);
@@ -72,5 +91,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
-

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
 import { Game } from "@/types/game";
@@ -403,30 +404,24 @@ export default function AdminPage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-gray-700 mb-2">Image (URL or Upload)</label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={gameFormData.image}
-                      onChange={(e) =>
-                        setGameFormData((prev) => ({ ...prev, image: e.target.value }))
+                  <label className="block text-gray-700 mb-2">Upload Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        void handleImageUpload(file, "game");
+                        e.target.value = "";
                       }
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="/games/image.jpg"
-                    />
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          void handleImageUpload(file, "game");
-                          e.target.value = "";
-                        }
-                      }}
-                      className="text-sm"
-                    />
-                  </div>
+                    }}
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  />
+                  {gameFormData.image && (
+                    <p className="text-xs text-gray-500 mt-2 break-all">
+                      Uploaded image: {gameFormData.image}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-gray-700 mb-2">Download URL</label>
@@ -547,6 +542,7 @@ export default function AdminPage() {
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rating</th>
@@ -558,6 +554,17 @@ export default function AdminPage() {
               <tbody className="divide-y divide-gray-200">
                 {games.map((game) => (
                   <tr key={game.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <div className="relative w-14 h-14 rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
+                        <Image
+                          src={game.image || "/placeholder-game.jpg"}
+                          alt={game.name}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
+                    </td>
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{game.name}</div>
                       <div className="text-sm text-gray-500 line-clamp-1">{game.description}</div>
@@ -687,30 +694,24 @@ export default function AdminPage() {
                 />
               </div>
               <div>
-                <label className="block text-gray-700 mb-2">Blog Image</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={blogFormData.image}
-                    onChange={(e) =>
-                      setBlogFormData((prev) => ({ ...prev, image: e.target.value }))
+                <label className="block text-gray-700 mb-2">Upload Blog Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      void handleImageUpload(file, "blog");
+                      e.target.value = "";
                     }
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="/games/blog-image.jpg"
-                  />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        void handleImageUpload(file, "blog");
-                        e.target.value = "";
-                      }
-                    }}
-                    className="text-sm"
-                  />
-                </div>
+                  }}
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                />
+                {blogFormData.image && (
+                  <p className="text-xs text-gray-500 mt-2 break-all">
+                    Uploaded image: {blogFormData.image}
+                  </p>
+                )}
               </div>
               <div className="flex flex-wrap gap-3">
                 <button
@@ -746,6 +747,7 @@ export default function AdminPage() {
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Author</th>
@@ -757,6 +759,17 @@ export default function AdminPage() {
               <tbody className="divide-y divide-gray-200">
                 {blogs.map((blog) => (
                   <tr key={blog.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <div className="relative w-14 h-14 rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
+                        <Image
+                          src={blog.image || "/websitelogo.png"}
+                          alt={blog.title}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                      </div>
+                    </td>
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{blog.title}</div>
                       <div className="text-sm text-gray-500 line-clamp-1">{blog.excerpt}</div>
