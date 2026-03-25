@@ -132,19 +132,19 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(gameJsonLd) }}
       />
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col page-shell">
         <Header />
         <main
           id="games"
-          className="grow container mx-auto px-4 py-4 md:py-8 scroll-mt-24 sm:scroll-mt-28"
+          className="grow max-w-6xl mx-auto w-full px-4 py-6 md:py-10 scroll-mt-24 sm:scroll-mt-28"
         >
           {hotGames.length > 0 && (
             <section className="mb-8 md:mb-12">
-              <div className="flex flex-col sm:flex-row sm:items-center mb-4 md:mb-6 gap-2">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+              <div className="flex flex-col sm:flex-row sm:items-center mb-4 md:mb-6 gap-3">
+                <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-950">
                   Hot Games
                 </h2>
-                <span className="inline-block bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold w-fit">
+                <span className="inline-block bg-gradient-to-r from-emerald-500 to-lime-500 text-white px-3.5 py-1.5 rounded-full text-sm font-bold w-fit shadow-md">
                   Trending
                 </span>
               </div>
@@ -153,7 +153,7 @@ export default async function Home() {
           )}
 
           <section>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-6">
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-slate-950 mb-4 md:mb-6">
               Recommended Apps
             </h2>
             <GameList games={normalGames} />

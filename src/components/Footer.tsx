@@ -2,23 +2,25 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-800 text-white mt-8 md:mt-16">
-      <div className="w-full px-3 sm:px-4 py-4 sm:py-6 md:py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
+    <footer className="mt-12 md:mt-20 border-t border-emerald-200/70 bg-emerald-950 text-white">
+      <div className="max-w-6xl mx-auto px-4 py-10 md:py-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12">
           <div>
-            <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-4">
-              About
+            <p className="text-xs uppercase tracking-[0.25em] text-emerald-200/70 mb-3">
+              rummys.online
+            </p>
+            <h3 className="text-xl sm:text-2xl font-bold mb-3">
+              Discover apps with a cleaner, faster browsing experience.
             </h3>
-            <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
-              rummys.online is your trusted source for discovering the best
-              rummy and gaming apps in one place.
+            <p className="text-emerald-50/75 text-sm sm:text-base leading-7 max-w-xl">
+              rummys.online helps you explore rummy and gaming apps in one
+              polished place with quick access, clean listings, and easy mobile
+              browsing.
             </p>
           </div>
-          <div>
-            <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-4">
-              Legal
-            </h3>
-            <ul className="space-y-1.5 sm:space-y-2 text-gray-400 text-xs sm:text-sm">
+          <div className="sm:justify-self-end">
+            <h3 className="text-base sm:text-lg font-bold mb-4">Legal</h3>
+            <ul className="space-y-2 text-emerald-50/75 text-sm sm:text-base">
               <li>
                 <Link
                   href="/terms"
@@ -38,19 +40,18 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="border-t border-gray-700 mt-4 sm:mt-6 md:mt-8 pt-4 sm:pt-6 md:pt-8 text-center text-gray-400 text-xs sm:text-sm max-w-6xl mx-auto">
+
+        <div className="border-t border-emerald-900 mt-8 pt-6 text-sm text-emerald-50/60">
           <p className="mb-2 leading-relaxed">
-            <strong className="text-white text-xs sm:text-sm">
-              *You must be 18 years or older to Play Real Money Rummy
+            <strong className="text-white">
+              *You must be 18 years or older to play real money rummy.
             </strong>
           </p>
           <p className="mb-2 leading-relaxed">
-            <strong className="text-yellow-500">Warning:</strong> This game
-            involves financial risk, play responsibly and at your own risk.
+            <strong className="text-orange-400">Warning:</strong> This game
+            involves financial risk. Play responsibly and at your own risk.
           </p>
-          <p className="text-xs sm:text-sm">
-            Copyright © rummys.online All Rights Reserved
-          </p>
+          <p>Copyright © rummys.online All Rights Reserved</p>
         </div>
       </div>
     </footer>

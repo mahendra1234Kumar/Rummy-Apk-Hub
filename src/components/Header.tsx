@@ -6,79 +6,73 @@ import { usePathname } from "next/navigation";
 export default function Header() {
   const pathname = usePathname();
 
-  // Check if current page is active
   const isActive = (href: string) => {
     if (href === "/") {
-      // Home is active only on home page, not on game detail pages
       return pathname === "/" && !pathname.includes("/game/");
     }
     if (href === "/#games") {
-      // Games is active on game detail pages, or if we're on home with games section
       return pathname.startsWith("/game/");
     }
     return pathname === href || pathname.startsWith(href + "/");
   };
 
-  // Get active class for navigation links
   const getActiveClass = (href: string) => {
     const active = isActive(href);
     return active
-      ? "text-blue-700 font-bold border-b-2 border-blue-700 pb-1"
-      : "text-gray-700 hover:text-blue-700";
+      ? "text-emerald-950 bg-white/90 shadow-sm"
+      : "text-slate-600 hover:text-emerald-950 hover:bg-white/70";
   };
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-[100] w-full left-0 right-0">
-      {/* Top bar (compact like screenshot) */}
-      <div className="bg-blue-700 text-white w-full">
-        <div className="w-full px-3 py-2 flex items-center">
-          <Link
-            href="/"
-            className="font-bold text-sm sm:text-base truncate"
-            title="rummys.online"
-          >
-            rummys.online
-          </Link>
+    <header className="sticky top-0 z-[100] w-full left-0 right-0">
+      <div className="bg-gradient-to-r from-emerald-950 via-emerald-800 to-lime-500 text-white border-b border-white/10 shadow-[0_12px_40px_rgba(20,83,45,0.2)]">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <Link
+              href="/"
+              className="font-black tracking-tight text-lg sm:text-xl truncate"
+              title="rummys.online"
+            >
+              <span className="bg-gradient-to-r from-white via-lime-100 to-emerald-200 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(255,255,255,0.12)]">
+                rummys.online
+              </span>
+            </Link>
+            <span className="hidden md:inline-flex text-xs uppercase tracking-[0.25em] text-emerald-50/80">
+              Fresh Picks Daily
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Tabs row */}
-      <nav className="bg-white border-b border-gray-200 w-full overflow-hidden">
-        <div className="grid grid-cols-5 sm:flex sm:items-center sm:gap-4 md:gap-6 text-sm font-semibold py-2 px-2 sm:px-3 w-full">
-          <Link 
-            href="/" 
-            className={`transition whitespace-nowrap text-center sm:text-left ${getActiveClass("/")}`}
+      <nav className="bg-white/70 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_10px_30px_rgba(15,23,42,0.06)]">
+        <div className="max-w-6xl mx-auto grid grid-cols-5 sm:flex sm:items-center sm:gap-3 text-sm font-semibold py-2 px-2 sm:px-4 w-full">
+          <Link
+            href="/"
+            className={`rounded-full px-2.5 sm:px-4 py-2 text-center sm:text-left transition ${getActiveClass("/")}`}
           >
             Home
           </Link>
-          {/* <Link 
-            href="/#games" 
-            className={`transition whitespace-nowrap flex-shrink-0 ${getActiveClass("/#games")}`}
-            onClick={handleGamesClick}
-          >
-            Games
-          </Link> */}
-          <Link 
-            href="/about" 
-            className={`transition whitespace-nowrap text-center sm:text-left ${getActiveClass("/about")}`}
+          <Link
+            href="/about"
+            className={`rounded-full px-2.5 sm:px-4 py-2 text-center sm:text-left transition ${getActiveClass("/about")}`}
           >
             About
           </Link>
           <Link
             href="/blogs"
-            className={`transition whitespace-nowrap text-center sm:text-left ${getActiveClass("/blogs")}`}
+            className={`rounded-full px-2.5 sm:px-4 py-2 text-center sm:text-left transition ${getActiveClass("/blogs")}`}
           >
             Blogs
           </Link>
-          <Link 
-            href="/contact" 
-            className={`transition whitespace-nowrap text-center sm:text-left ${getActiveClass("/contact")}`}
+          <Link
+            href="/contact"
+            className={`rounded-full px-2.5 sm:px-4 py-2 text-center sm:text-left transition ${getActiveClass("/contact")}`}
           >
             Contact
           </Link>
-          <Link 
-            href="/privacy" 
-            className={`transition whitespace-nowrap text-center sm:text-left ${getActiveClass("/privacy")}`}
+          <Link
+            href="/privacy"
+            className={`rounded-full px-2.5 sm:px-4 py-2 text-center sm:text-left transition ${getActiveClass("/privacy")}`}
           >
             Privacy
           </Link>
