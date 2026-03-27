@@ -2,6 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Game } from "@/app/models/Game";
 
+function normalizeDownloadUrl(downloadUrl?: string) {
+  const trimmed = (downloadUrl || "").trim();
+
+  if (!trimmed || trimmed === "#") {
+    return "#";
+  }
+
+  try {
+    return new URL(trimmed).toString();
+  } catch {
+    try {
+      return new URL(`https://${trimmed}`).toString();
+    } catch {
+      return "#";
+    }
+  }
+}
+
 /**
  * GET – Fetch all games
  */
@@ -63,7 +81,7 @@ export async function POST(request: NextRequest) {
       name,
       description,
       image: image || "/placeholder-game.jpg",
-      downloadUrl: downloadUrl || "#",
+      downloadUrl: normalizeDownloadUrl(downloadUrl),
       rating: rating || 3,
       bonus: bonus || "",
       downloads: downloads || "",
@@ -112,6 +130,10 @@ export async function PUT(request: NextRequest) {
 
     delete body.id;
     delete body._id;
+
+    if ("downloadUrl" in body) {
+      body.downloadUrl = normalizeDownloadUrl(body.downloadUrl);
+    }
 
     const updatedGame = await Game.findByIdAndUpdate(
       gameId,
