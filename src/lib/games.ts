@@ -2,6 +2,19 @@ import { Game as GameType } from "@/types/game";
 import { connectDB } from "@/lib/mongodb";
 import { Game } from "@/app/models/Game";
 
+export function slugifyGameName(name: string) {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+export function getGamePath(game: Pick<GameType, "slug">) {
+  return `/game/${game.slug}`;
+}
+
 /**
  * Fetch all games from MongoDB
  */
@@ -15,6 +28,7 @@ export async function getGames(): Promise<GameType[]> {
     // Convert MongoDB _id to id and format dates
     return games.map((game: any) => ({
       id: game._id.toString(),
+      slug: slugifyGameName(game.name || "game"),
       name: game.name,
       description: game.description,
       image: game.image,
@@ -74,6 +88,7 @@ export async function getGameById(id: string): Promise<GameType | undefined> {
     
     return {
       id: game._id.toString(),
+      slug: slugifyGameName(game.name || "game"),
       name: game.name,
       description: game.description,
       image: game.image,
@@ -93,3 +108,24 @@ export async function getGameById(id: string): Promise<GameType | undefined> {
   }
 }
 
+export async function getGameBySlug(slug: string): Promise<GameType | undefined> {
+  try {
+    const games = await getGames();
+    return games.find((game) => game.slug === slug);
+  } catch (error) {
+    console.error("Error fetching game by slug:", error);
+    return undefined;
+  }
+}
+
+export async function getGameByIdentifier(
+  identifier: string
+): Promise<GameType | undefined> {
+  const isMongoId = /^[a-f0-9]{24}$/i.test(identifier);
+
+  if (isMongoId) {
+    return getGameById(identifier);
+  }
+
+  return getGameBySlug(identifier);
+}

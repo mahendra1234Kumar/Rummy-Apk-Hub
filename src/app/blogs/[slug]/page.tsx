@@ -27,7 +27,25 @@ export async function generateMetadata({
   return {
     title: blog.title,
     description: blog.excerpt,
+    keywords: [
+      blog.title,
+      `${blog.category} blog`,
+      "rummy article",
+      "rummy tips",
+      "gaming update",
+    ],
     openGraph: {
+      type: "article",
+      url: `https://rummys.online/blogs/${blog.slug}`,
+      title: blog.title,
+      description: blog.excerpt,
+      images: [blog.image],
+      publishedTime: blog.createdAt,
+      modifiedTime: blog.updatedAt,
+      authors: [blog.author],
+    },
+    twitter: {
+      card: "summary_large_image",
       title: blog.title,
       description: blog.excerpt,
       images: [blog.image],
@@ -57,8 +75,36 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: blog.title,
+    description: blog.excerpt,
+    image: [blog.image],
+    datePublished: blog.createdAt,
+    dateModified: blog.updatedAt,
+    author: {
+      "@type": "Person",
+      name: blog.author,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "rummys.online",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://rummys.online/websitelogo.png",
+      },
+    },
+    mainEntityOfPage: `https://rummys.online/blogs/${blog.slug}`,
+    articleSection: blog.category,
+  };
+
   return (
     <div className="page-shell min-h-screen flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <Header />
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-6 md:py-10">
         <Link
@@ -119,9 +165,14 @@ export default async function BlogDetailPage({ params }: BlogPageProps) {
                 </p>
                 <Link
                   href="/blogs"
-                  className="mt-5 inline-flex items-center justify-center rounded-full border border-white/70 bg-white px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] text-slate-950 no-underline shadow-[0_10px_30px_rgba(255,255,255,0.18)] transition hover:scale-[1.02] hover:bg-emerald-50"
+                  className="mt-5 inline-flex min-w-52 items-center justify-center rounded-full border border-white/70 bg-white px-6 py-3 no-underline shadow-[0_10px_30px_rgba(255,255,255,0.18)] transition hover:scale-[1.02] hover:bg-emerald-50"
                 >
-                  Browse All Blogs
+                  <span
+                    className="text-sm font-bold uppercase tracking-[0.16em] text-slate-950"
+                    style={{ color: "#0f172a" }}
+                  >
+                    Browse All Blogs
+                  </span>
                 </Link>
               </div>
             </div>

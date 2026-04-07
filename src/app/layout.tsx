@@ -89,8 +89,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Add your Google Search Console verification code here
-    // google: "your-verification-code",
+    google: process.env.GOOGLE_SITE_VERIFICATION,
   },
   alternates: {
     canonical: "/",

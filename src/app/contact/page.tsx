@@ -65,7 +65,8 @@ export default function ContactPage() {
                           <a
                             href="https://t.me/TrickyPromotion"
                             target="_blank"
-                            rel="noopener noreferrer"
+                            rel="nofollow sponsored noopener noreferrer"
+                            referrerPolicy="no-referrer"
                             className="text-blue-600 hover:text-blue-700 underline"
                           >
                             @TrickyPromotion

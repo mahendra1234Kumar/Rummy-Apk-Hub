@@ -1,8 +1,8 @@
-import { getGameById } from "@/lib/games";
+import { getGameByIdentifier, getGamePath } from "@/lib/games";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 
 interface PageProps {
@@ -31,7 +31,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const game = await getGameById(id);
+  const game = await getGameByIdentifier(id);
 
   if (!game) {
     return {
@@ -44,19 +44,34 @@ export async function generateMetadata({
     description: game.description,
     keywords: `${game.name}, ${game.name} apk, ${game.name} download, rummy games, online rummy`,
     openGraph: {
+      type: "website",
+      url: `https://rummys.online${getGamePath(game)}`,
       title: `${game.name} - Download APK`,
       description: game.description,
       images: game.image ? [game.image] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${game.name} - Download APK`,
+      description: game.description,
+      images: game.image ? [game.image] : [],
+    },
+    alternates: {
+      canonical: getGamePath(game),
     },
   };
 }
 
 export default async function GameDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const game = await getGameById(id);
+  const game = await getGameByIdentifier(id);
 
   if (!game) {
     notFound();
+  }
+
+  if (id !== game.slug) {
+    redirect(getGamePath(game));
   }
 
   const rating = Math.max(0, Math.min(5, Number(game.rating) || 0));
@@ -102,8 +117,37 @@ export default async function GameDetailPage({ params }: PageProps) {
     },
   ];
 
+  const softwareJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: game.name,
+    description: game.description,
+    applicationCategory: "GameApplication",
+    operatingSystem: "Android",
+    image: game.image,
+    url: `https://rummys.online${getGamePath(game)}`,
+    author: {
+      "@type": "Organization",
+      name: "rummys.online",
+    },
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "INR",
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: rating.toFixed(1),
+      ratingCount: "1000",
+    },
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-emerald-50 via-white to-lime-50/60">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
+      />
       <Header />
       <main className="grow">
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8 lg:py-12">
@@ -160,7 +204,8 @@ export default async function GameDetailPage({ params }: PageProps) {
                   <a
                     href={downloadUrl || "#"}
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="nofollow sponsored noopener noreferrer"
+                    referrerPolicy="no-referrer"
                     className="bg-gradient-to-r from-emerald-600 via-green-500 to-lime-500 hover:from-emerald-700 hover:via-green-600 hover:to-lime-600 text-white px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg md:text-xl inline-flex items-center gap-2 sm:gap-3 transition-all shadow-2xl hover:shadow-emerald-500/35 transform hover:scale-105 active:scale-95"
                   >
                     <svg

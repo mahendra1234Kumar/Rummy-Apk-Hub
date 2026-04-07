@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GameList from "@/components/GameList";
 import type { Metadata } from "next";
+import { getGames } from "@/lib/games";
 
 // Always fetch fresh data from the API so new games from the admin panel
 // are reflected on the user side.
@@ -11,15 +12,15 @@ export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
 export const metadata: Metadata = {
-  title: "rummys.online - All Rummy & Teen Patti Game APKs Download",
+  title: "rummys.online - All Rummy & Yono Apps Bonus ₹41-₹101",
   description:
-    "rummys.online brings top rummy, teen patti, ludo, and poker game APKs together in one place with signup bonus offers and trusted gaming apps.",
+    "rummys.online brings top rummy, Yono, teen patti, ludo, and poker game APKs together in one place with bonus offers from ₹41 to ₹101 and trusted gaming apps.",
   keywords:
-    "rummys.online, rummy apk, rummy app download, game rummy download, teen patti apk, ludo game apk, poker game apk, online rummy, rummy cash games, real cash game apps",
+    "rummys.online, all rummy apps bonus, yono apps bonus, bonus 41 to 101, rummy apk, rummy app download, game rummy download, teen patti apk, ludo game apk, poker game apk, online rummy, rummy cash games, real cash game apps",
   openGraph: {
-    title: "rummys.online - Download Best Rummy & Game APKs",
+    title: "rummys.online - All Rummy & Yono Apps Bonus ₹41-₹101",
     description:
-      "rummys.online lists the best rummy, teen patti, ludo, and casino game APKs with bonuses and fast withdrawal.",
+      "rummys.online lists rummy, Yono, teen patti, ludo, and casino game APKs with bonus offers from ₹41 to ₹101 and fast withdrawal.",
     type: "website",
     locale: "en_IN",
   },
@@ -39,47 +40,8 @@ export const metadata: Metadata = {
   },
 };
 
-async function fetchAllGames(): Promise<Game[]> {
-  try {
-    // Build an absolute base URL that works in both dev and production
-    const vercelUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : null;
-
-    const baseUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ||
-      vercelUrl ||
-      "http://localhost:3000";
-
-    const response = await fetch(`${baseUrl}/api/games`, {
-      // no-store so we always see latest data after admin changes
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      console.error("Failed to fetch games from /api/games:", response.status);
-      return [];
-    }
-
-    const data = await response.json();
-
-    if (!data.success || !Array.isArray(data.games)) {
-      console.error("Invalid response format from /api/games:", data);
-      return [];
-    }
-
-    return data.games as Game[];
-  } catch (error: unknown) {
-    console.error("Error calling /api/games:", {
-      message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-    return [];
-  }
-}
-
 export default async function Home() {
-  const games = await fetchAllGames();
+  const games = await getGames();
   const hotGames = games.filter((game) => game.isHot);
   const normalGames = games.filter((game) => !game.isHot);
 
@@ -88,13 +50,8 @@ export default async function Home() {
     "@type": "WebSite",
     name: "rummys.online",
     description:
-      "rummys.online lets users discover top rummy, teen patti, ludo, and poker game APKs from one place.",
+      "rummys.online lets users discover rummy and Yono apps with bonus offers from Rs 41 to Rs 101, plus teen patti, ludo, and poker game APKs in one place.",
     url: "https://rummys.online",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: "https://rummys.online/search?q={search_term_string}",
-      "query-input": "required name=search_term_string",
-    },
   };
 
   const gameJsonLd = {
@@ -138,6 +95,22 @@ export default async function Home() {
           id="games"
           className="grow max-w-6xl mx-auto w-full px-4 py-6 md:py-10 scroll-mt-24 sm:scroll-mt-28"
         >
+          <section className="mb-8 md:mb-10">
+            <div className="max-w-4xl">
+              <p className="text-xs font-bold uppercase tracking-[0.26em] text-emerald-800">
+                Bonus Offers & APK Updates
+              </p>
+              <h1 className="mt-3 text-4xl md:text-5xl font-black tracking-tight text-slate-950">
+                All Rummy & Yono Apps Bonus ₹41-₹101
+              </h1>
+              <p className="mt-4 text-base md:text-lg leading-8 text-slate-600">
+                Explore top rummy, Yono, teen patti, ludo, and poker apps with
+                bonus offers, quick comparisons, and easy APK browsing on
+                rummys.online.
+              </p>
+            </div>
+          </section>
+
           {hotGames.length > 0 && (
             <section className="mb-8 md:mb-12">
               <div className="flex flex-col sm:flex-row sm:items-center mb-4 md:mb-6 gap-3">

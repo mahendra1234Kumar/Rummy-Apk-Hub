@@ -1,6 +1,7 @@
 import { Game } from "@/types/game";
 import Image from "next/image";
 import Link from "next/link";
+import { getGamePath } from "@/lib/games";
 
 interface GameCardProps {
   game: Game;
@@ -10,6 +11,7 @@ interface GameCardProps {
 export default function GameCard({ game }: GameCardProps) {
   const rating = Math.max(0, Math.min(5, Number(game.rating) || 0));
   const fullStars = Math.round(rating);
+  const gamePath = getGamePath(game);
 
   const stars = Array.from({ length: 5 }).map((_, i) => (
     <span
@@ -44,7 +46,7 @@ export default function GameCard({ game }: GameCardProps) {
         </div>
 
         <div className="min-w-0 flex-1">
-          <Link href={`/game/${game.id}`}>
+          <Link href={gamePath}>
             <h3 className="text-[15px] sm:text-lg font-extrabold text-slate-900 truncate hover:text-emerald-700 transition-colors">
               {game.name}
             </h3>
@@ -75,7 +77,7 @@ export default function GameCard({ game }: GameCardProps) {
 
         <div className="shrink-0 self-center">
           <Link
-            href={`/game/${game.id}`}
+            href={gamePath}
             className="bg-gradient-to-r from-emerald-600 via-green-500 to-lime-500 text-white px-3.5 sm:px-4.5 py-2.5 rounded-xl hover:brightness-105 transition font-bold text-xs sm:text-sm inline-flex items-center justify-center gap-1.5 whitespace-nowrap shadow-[0_12px_24px_rgba(34,197,94,0.22)]"
           >
             <svg
