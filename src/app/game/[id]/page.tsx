@@ -5,6 +5,9 @@ import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }
@@ -25,6 +28,10 @@ function normalizeDownloadUrl(downloadUrl: string) {
       return null;
     }
   }
+}
+
+function hasItems(items?: string[]) {
+  return Array.isArray(items) && items.length > 0;
 }
 
 export async function generateMetadata({
@@ -59,6 +66,16 @@ export async function generateMetadata({
     alternates: {
       canonical: getGamePath(game),
     },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
   };
 }
 
@@ -90,30 +107,44 @@ export default async function GameDetailPage({ params }: PageProps) {
     </span>
   ));
 
+  const detailFacts = [
+    { label: "Version", value: game.latestVersion },
+    { label: "App Size", value: game.appSize },
+    { label: "Updated", value: game.lastUpdated },
+    { label: "Category", value: game.category },
+    { label: "Withdrawal Time", value: game.withdrawalTime },
+  ].filter((item) => item.value);
+
   const contentSections = [
     {
-      title: `About ${gameName}`,
-      accent: "border-emerald-500 bg-gradient-to-r from-emerald-50 to-lime-50",
-      heading: "text-emerald-700 bg-emerald-600",
-      content: `${gameName} is designed for players who enjoy a clean mobile gaming experience, smooth gameplay, and easy access to popular card and entertainment formats. The platform focuses on quick joining, simple navigation, and an enjoyable app experience for everyday users.`,
+      title: `What is ${gameName}?`,
+      content:
+        game.longReview ||
+        `${gameName} is listed on rummys.online for users who want to compare mobile gaming apps, bonus details, download information, and basic app highlights before installing.`,
     },
     {
-      title: "Gameplay and Features",
-      accent: "border-lime-500 bg-gradient-to-r from-white to-emerald-50",
-      heading: "text-lime-700 bg-lime-600",
-      content: `Players can explore engaging game modes, attractive rewards, and an interface built to keep the experience simple and fast. Whether you are new to the app or already familiar with this category, ${gameName} aims to deliver a balanced and user-friendly setup.`,
+      title: `How to download ${gameName} APK`,
+      content:
+        game.howToDownload ||
+        `Use the download button on this page to visit the official download source for ${gameName}. Review the app details, permissions, and source page before installing any APK file.`,
     },
     {
-      title: "Bonuses and Withdrawals",
-      accent: "border-green-500 bg-gradient-to-r from-emerald-50 to-green-50",
-      heading: "text-green-700 bg-green-600",
-      content: `The app listing highlights bonus details, downloads, and minimum withdrawal information so users can quickly understand the offer before installing. This helps visitors compare apps faster and decide which one matches their preference.`,
+      title: `How to register on ${gameName}`,
+      content:
+        game.howToRegister ||
+        `After installing ${gameName}, open the app and follow its signup flow. Check bonus terms, account requirements, and verification details inside the app before adding personal or payment information.`,
     },
     {
-      title: "Safe Use and Quick Access",
-      accent: "border-orange-400 bg-gradient-to-r from-lime-50 to-amber-50",
-      heading: "text-orange-600 bg-orange-500",
-      content: `Always review the app details carefully before downloading and use only links you trust. If a game includes real-money features, play responsibly and make sure it matches your comfort level and local rules.`,
+      title: "Withdrawal process",
+      content:
+        game.withdrawalProcess ||
+        `Withdrawal rules can vary by app. Check ${gameName}'s in-app wallet, payment method support, minimum withdrawal amount, and verification requirements before playing with real-money features.`,
+    },
+    {
+      title: `Is ${gameName} safe?`,
+      content:
+        game.safetyNote ||
+        `Only download ${gameName} from a source you trust, review permissions carefully, and play responsibly. Real-money games may be restricted in some locations, so confirm local rules before use.`,
     },
   ];
 
@@ -126,6 +157,9 @@ export default async function GameDetailPage({ params }: PageProps) {
     operatingSystem: "Android",
     image: game.image,
     url: `https://rummys.online${getGamePath(game)}`,
+    softwareVersion: game.latestVersion || undefined,
+    fileSize: game.appSize || undefined,
+    dateModified: game.lastUpdated || game.updatedAt,
     author: {
       "@type": "Organization",
       name: "rummys.online",
@@ -142,12 +176,57 @@ export default async function GameDetailPage({ params }: PageProps) {
     },
   };
 
+  const faqJsonLd =
+    game.faq && game.faq.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: game.faq.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: item.answer,
+            },
+          })),
+        }
+      : null;
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://rummys.online/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: game.name,
+        item: `https://rummys.online${getGamePath(game)}`,
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-emerald-50 via-white to-lime-50/60">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
       <Header />
       <main className="grow">
         <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8 lg:py-12">
@@ -337,14 +416,55 @@ export default async function GameDetailPage({ params }: PageProps) {
             </div>
 
             <div className="p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 space-y-6 sm:space-y-8 md:space-y-10">
+              {detailFacts.length > 0 && (
+                <section className="rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-emerald-100 bg-white">
+                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-950 mb-4">
+                    {gameName} APK Information
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {detailFacts.map((item) => (
+                      <div
+                        key={item.label}
+                        className="rounded-lg border border-emerald-100 bg-emerald-50/50 p-4"
+                      >
+                        <p className="text-xs font-semibold uppercase text-emerald-700">
+                          {item.label}
+                        </p>
+                        <p className="mt-1 text-base font-bold text-slate-950">
+                          {item.value}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {hasItems(game.features) && (
+                <section className="rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-lime-100 bg-lime-50/50">
+                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-950 mb-4">
+                    {gameName} Features
+                  </h2>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {game.features!.map((feature) => (
+                      <li
+                        key={feature}
+                        className="rounded-lg bg-white border border-lime-100 p-4 text-slate-700"
+                      >
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
               {contentSections.map((section, index) => (
                 <section
                   key={section.title}
-                  className={`${section.accent} rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border-l-4`}
+                  className="rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border-l-4 border-emerald-500 bg-gradient-to-r from-emerald-50 to-lime-50"
                 >
                   <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-3 sm:mb-4 flex items-start sm:items-center gap-2 sm:gap-3">
                     <span
-                      className={`${section.heading} text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-base sm:text-xl shrink-0 mt-0.5 sm:mt-0`}
+                      className="bg-emerald-600 text-white rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-base sm:text-xl shrink-0 mt-0.5 sm:mt-0"
                     >
                       {index + 1}
                     </span>
@@ -355,6 +475,102 @@ export default async function GameDetailPage({ params }: PageProps) {
                   </p>
                 </section>
               ))}
+
+              {(hasItems(game.paymentMethods) || game.bonus || game.minWithdrawal) && (
+                <section className="rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-green-100 bg-white">
+                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-950 mb-4">
+                    Bonus, Payments and Withdrawals
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {game.bonus && (
+                      <div className="rounded-lg bg-green-50 border border-green-100 p-4">
+                        <p className="text-xs font-semibold uppercase text-green-700">
+                          Welcome Bonus
+                        </p>
+                        <p className="mt-1 text-lg font-bold text-slate-950">
+                          {game.bonus}
+                        </p>
+                      </div>
+                    )}
+                    {game.minWithdrawal && (
+                      <div className="rounded-lg bg-green-50 border border-green-100 p-4">
+                        <p className="text-xs font-semibold uppercase text-green-700">
+                          Minimum Withdrawal
+                        </p>
+                        <p className="mt-1 text-lg font-bold text-slate-950">
+                          {game.minWithdrawal}
+                        </p>
+                      </div>
+                    )}
+                    {hasItems(game.paymentMethods) && (
+                      <div className="rounded-lg bg-green-50 border border-green-100 p-4">
+                        <p className="text-xs font-semibold uppercase text-green-700">
+                          Payment Methods
+                        </p>
+                        <p className="mt-1 text-base font-bold text-slate-950">
+                          {game.paymentMethods!.join(", ")}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {(hasItems(game.pros) || hasItems(game.cons)) && (
+                <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {hasItems(game.pros) && (
+                    <div className="rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-emerald-100 bg-emerald-50/60">
+                      <h2 className="text-xl sm:text-2xl font-bold text-slate-950 mb-4">
+                        Pros
+                      </h2>
+                      <ul className="space-y-3 text-slate-700">
+                        {game.pros!.map((item) => (
+                          <li key={item} className="rounded-lg bg-white p-3">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {hasItems(game.cons) && (
+                    <div className="rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-orange-100 bg-orange-50/60">
+                      <h2 className="text-xl sm:text-2xl font-bold text-slate-950 mb-4">
+                        Cons
+                      </h2>
+                      <ul className="space-y-3 text-slate-700">
+                        {game.cons!.map((item) => (
+                          <li key={item} className="rounded-lg bg-white p-3">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </section>
+              )}
+
+              {game.faq && game.faq.length > 0 && (
+                <section className="rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-slate-200 bg-white">
+                  <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-950 mb-4">
+                    Frequently Asked Questions
+                  </h2>
+                  <div className="space-y-3">
+                    {game.faq.map((item) => (
+                      <div
+                        key={item.question}
+                        className="rounded-lg border border-slate-200 p-4"
+                      >
+                        <h3 className="font-bold text-slate-950">
+                          {item.question}
+                        </h3>
+                        <p className="mt-2 text-slate-700 leading-relaxed">
+                          {item.answer}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
 
               <div className="bg-gradient-to-r from-emerald-700 via-green-600 to-lime-500 rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 text-center shadow-2xl">
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">

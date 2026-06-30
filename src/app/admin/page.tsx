@@ -12,12 +12,26 @@ type AdminTab = "games" | "blogs";
 type GameFormData = {
   name: string;
   description: string;
+  longReview: string;
   image: string;
   downloadUrl: string;
   rating: number;
   bonus: string;
   downloads: string;
   minWithdrawal: string;
+  latestVersion: string;
+  appSize: string;
+  lastUpdated: string;
+  withdrawalTime: string;
+  howToDownload: string;
+  howToRegister: string;
+  withdrawalProcess: string;
+  safetyNote: string;
+  features: string;
+  pros: string;
+  cons: string;
+  paymentMethods: string;
+  faq: string;
   isHot: boolean;
   category: string;
 };
@@ -35,12 +49,26 @@ type BlogFormData = {
 const initialGameForm: GameFormData = {
   name: "",
   description: "",
+  longReview: "",
   image: "",
   downloadUrl: "",
   rating: 3,
   bonus: "",
   downloads: "",
   minWithdrawal: "",
+  latestVersion: "",
+  appSize: "",
+  lastUpdated: "",
+  withdrawalTime: "",
+  howToDownload: "",
+  howToRegister: "",
+  withdrawalProcess: "",
+  safetyNote: "",
+  features: "",
+  pros: "",
+  cons: "",
+  paymentMethods: "",
+  faq: "",
   isHot: false,
   category: "Rummy",
 };
@@ -57,6 +85,47 @@ const initialBlogForm: BlogFormData = {
 
 function getErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Something went wrong";
+}
+
+function listToTextarea(items?: string[]) {
+  return Array.isArray(items) ? items.join("\n") : "";
+}
+
+function textareaToList(value: string) {
+  return value
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function faqToTextarea(items?: Game["faq"]) {
+  return Array.isArray(items)
+    ? items.map((item) => `${item.question} | ${item.answer}`).join("\n")
+    : "";
+}
+
+function textareaToFaq(value: string) {
+  return value
+    .split("\n")
+    .map((line) => {
+      const [question, ...answerParts] = line.split("|");
+      return {
+        question: question?.trim() || "",
+        answer: answerParts.join("|").trim(),
+      };
+    })
+    .filter((item) => item.question && item.answer);
+}
+
+function serializeGameForm(form: GameFormData) {
+  return {
+    ...form,
+    features: textareaToList(form.features),
+    pros: textareaToList(form.pros),
+    cons: textareaToList(form.cons),
+    paymentMethods: textareaToList(form.paymentMethods),
+    faq: textareaToFaq(form.faq),
+  };
 }
 
 export default function AdminPage() {
@@ -192,7 +261,9 @@ export default function AdminPage() {
         method: isEditing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(
-          isEditing ? { id: editingGame?.id, ...gameFormData } : gameFormData
+          isEditing
+            ? { id: editingGame?.id, ...serializeGameForm(gameFormData) }
+            : serializeGameForm(gameFormData)
         ),
       });
       const data = (await response.json()) as {
@@ -301,12 +372,26 @@ export default function AdminPage() {
     setGameFormData({
       name: game.name,
       description: game.description,
+      longReview: game.longReview || "",
       image: game.image,
       downloadUrl: game.downloadUrl,
       rating: game.rating,
       bonus: game.bonus || "",
       downloads: game.downloads || "",
       minWithdrawal: game.minWithdrawal || "",
+      latestVersion: game.latestVersion || "",
+      appSize: game.appSize || "",
+      lastUpdated: game.lastUpdated || "",
+      withdrawalTime: game.withdrawalTime || "",
+      howToDownload: game.howToDownload || "",
+      howToRegister: game.howToRegister || "",
+      withdrawalProcess: game.withdrawalProcess || "",
+      safetyNote: game.safetyNote || "",
+      features: listToTextarea(game.features),
+      pros: listToTextarea(game.pros),
+      cons: listToTextarea(game.cons),
+      paymentMethods: listToTextarea(game.paymentMethods),
+      faq: faqToTextarea(game.faq),
       isHot: game.isHot,
       category: game.category || "Rummy",
     });
@@ -402,6 +487,21 @@ export default function AdminPage() {
                   required
                 />
               </div>
+              <div>
+                <label className="block text-gray-700 mb-2">Long Review</label>
+                <textarea
+                  value={gameFormData.longReview}
+                  onChange={(e) =>
+                    setGameFormData((prev) => ({
+                      ...prev,
+                      longReview: e.target.value,
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows={5}
+                  placeholder="Write a unique review for this specific game."
+                />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-700 mb-2">Upload Image</label>
@@ -494,6 +594,63 @@ export default function AdminPage() {
                     className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
+                <div>
+                  <label className="block text-gray-700 mb-2">Latest Version</label>
+                  <input
+                    type="text"
+                    value={gameFormData.latestVersion}
+                    onChange={(e) =>
+                      setGameFormData((prev) => ({
+                        ...prev,
+                        latestVersion: e.target.value,
+                      }))
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-2">App Size</label>
+                  <input
+                    type="text"
+                    value={gameFormData.appSize}
+                    onChange={(e) =>
+                      setGameFormData((prev) => ({
+                        ...prev,
+                        appSize: e.target.value,
+                      }))
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-2">Last Updated</label>
+                  <input
+                    type="text"
+                    value={gameFormData.lastUpdated}
+                    onChange={(e) =>
+                      setGameFormData((prev) => ({
+                        ...prev,
+                        lastUpdated: e.target.value,
+                      }))
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Example: June 2026"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-2">Withdrawal Time</label>
+                  <input
+                    type="text"
+                    value={gameFormData.withdrawalTime}
+                    onChange={(e) =>
+                      setGameFormData((prev) => ({
+                        ...prev,
+                        withdrawalTime: e.target.value,
+                      }))
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
                 <div className="flex items-center mt-2">
                   <label className="flex items-center cursor-pointer">
                     <input
@@ -507,6 +664,130 @@ export default function AdminPage() {
                     <span className="ml-2 text-gray-700 font-medium">Mark as Hot Game</span>
                   </label>
                 </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-700 mb-2">Features</label>
+                  <textarea
+                    value={gameFormData.features}
+                    onChange={(e) =>
+                      setGameFormData((prev) => ({
+                        ...prev,
+                        features: e.target.value,
+                      }))
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={5}
+                    placeholder="One feature per line"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-2">Payment Methods</label>
+                  <textarea
+                    value={gameFormData.paymentMethods}
+                    onChange={(e) =>
+                      setGameFormData((prev) => ({
+                        ...prev,
+                        paymentMethods: e.target.value,
+                      }))
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={5}
+                    placeholder="UPI&#10;Bank Transfer&#10;Paytm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-2">Pros</label>
+                  <textarea
+                    value={gameFormData.pros}
+                    onChange={(e) =>
+                      setGameFormData((prev) => ({ ...prev, pros: e.target.value }))
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={5}
+                    placeholder="One pro per line"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 mb-2">Cons</label>
+                  <textarea
+                    value={gameFormData.cons}
+                    onChange={(e) =>
+                      setGameFormData((prev) => ({ ...prev, cons: e.target.value }))
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={5}
+                    placeholder="One con per line"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-2">How to Download</label>
+                <textarea
+                  value={gameFormData.howToDownload}
+                  onChange={(e) =>
+                    setGameFormData((prev) => ({
+                      ...prev,
+                      howToDownload: e.target.value,
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows={4}
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-2">How to Register</label>
+                <textarea
+                  value={gameFormData.howToRegister}
+                  onChange={(e) =>
+                    setGameFormData((prev) => ({
+                      ...prev,
+                      howToRegister: e.target.value,
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows={4}
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-2">Withdrawal Process</label>
+                <textarea
+                  value={gameFormData.withdrawalProcess}
+                  onChange={(e) =>
+                    setGameFormData((prev) => ({
+                      ...prev,
+                      withdrawalProcess: e.target.value,
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows={4}
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-2">Safety Note</label>
+                <textarea
+                  value={gameFormData.safetyNote}
+                  onChange={(e) =>
+                    setGameFormData((prev) => ({
+                      ...prev,
+                      safetyNote: e.target.value,
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows={4}
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-2">FAQ</label>
+                <textarea
+                  value={gameFormData.faq}
+                  onChange={(e) =>
+                    setGameFormData((prev) => ({ ...prev, faq: e.target.value }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows={5}
+                  placeholder="Question | Answer&#10;Question | Answer"
+                />
               </div>
               <div className="flex flex-wrap gap-3">
                 <button

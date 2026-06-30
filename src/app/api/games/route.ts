@@ -20,6 +20,64 @@ function normalizeDownloadUrl(downloadUrl?: string) {
   }
 }
 
+function normalizeStringList(value: unknown) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .map((item) => String(item).trim())
+    .filter(Boolean);
+}
+
+function normalizeFaq(value: unknown) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .map((item) => {
+      if (!item || typeof item !== "object") {
+        return null;
+      }
+
+      const faqItem = item as { question?: unknown; answer?: unknown };
+      const question = String(faqItem.question || "").trim();
+      const answer = String(faqItem.answer || "").trim();
+
+      return question && answer ? { question, answer } : null;
+    })
+    .filter(Boolean);
+}
+
+function sanitizeGameBody(body: Record<string, unknown>) {
+  return {
+    ...body,
+    image: String(body.image || "").trim() || "/placeholder-game.jpg",
+    downloadUrl: normalizeDownloadUrl(String(body.downloadUrl || "")),
+    rating: Number(body.rating) || 3,
+    longReview: String(body.longReview || "").trim(),
+    bonus: String(body.bonus || "").trim(),
+    downloads: String(body.downloads || "").trim(),
+    minWithdrawal: String(body.minWithdrawal || "").trim(),
+    latestVersion: String(body.latestVersion || "").trim(),
+    appSize: String(body.appSize || "").trim(),
+    lastUpdated: String(body.lastUpdated || "").trim(),
+    withdrawalTime: String(body.withdrawalTime || "").trim(),
+    howToDownload: String(body.howToDownload || "").trim(),
+    howToRegister: String(body.howToRegister || "").trim(),
+    withdrawalProcess: String(body.withdrawalProcess || "").trim(),
+    safetyNote: String(body.safetyNote || "").trim(),
+    features: normalizeStringList(body.features),
+    pros: normalizeStringList(body.pros),
+    cons: normalizeStringList(body.cons),
+    paymentMethods: normalizeStringList(body.paymentMethods),
+    faq: normalizeFaq(body.faq),
+    isHot: Boolean(body.isHot),
+    category: String(body.category || "General").trim() || "General",
+  };
+}
+
 /**
  * GET – Fetch all games
  */
@@ -66,6 +124,20 @@ export async function POST(request: NextRequest) {
       bonus,
       downloads,
       minWithdrawal,
+      longReview,
+      latestVersion,
+      appSize,
+      lastUpdated,
+      withdrawalTime,
+      howToDownload,
+      howToRegister,
+      withdrawalProcess,
+      safetyNote,
+      features,
+      pros,
+      cons,
+      paymentMethods,
+      faq,
       isHot,
       category,
     } = body;
@@ -80,14 +152,30 @@ export async function POST(request: NextRequest) {
     const newGame = await Game.create({
       name,
       description,
-      image: image || "/placeholder-game.jpg",
-      downloadUrl: normalizeDownloadUrl(downloadUrl),
-      rating: rating || 3,
-      bonus: bonus || "",
-      downloads: downloads || "",
-      minWithdrawal: minWithdrawal || "",
-      isHot: isHot || false,
-      category: category || "General",
+      ...sanitizeGameBody({
+        image,
+        downloadUrl,
+        rating,
+        bonus,
+        downloads,
+        minWithdrawal,
+        longReview,
+        latestVersion,
+        appSize,
+        lastUpdated,
+        withdrawalTime,
+        howToDownload,
+        howToRegister,
+        withdrawalProcess,
+        safetyNote,
+        features,
+        pros,
+        cons,
+        paymentMethods,
+        faq,
+        isHot,
+        category,
+      }),
     });
 
     return NextResponse.json(
@@ -131,13 +219,11 @@ export async function PUT(request: NextRequest) {
     delete body.id;
     delete body._id;
 
-    if ("downloadUrl" in body) {
-      body.downloadUrl = normalizeDownloadUrl(body.downloadUrl);
-    }
+    const updates = sanitizeGameBody(body);
 
     const updatedGame = await Game.findByIdAndUpdate(
       gameId,
-      body,
+      updates,
       { new: true }
     );
 
